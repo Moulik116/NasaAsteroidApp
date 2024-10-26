@@ -17,9 +17,28 @@ const AsteroidApp = () => {
     dispatch(fetchAsteroidStart());
     try {
       const response = await Axios.get(
-        `https://api.nasa.gov/neo/rest/v1/neo/${asteroidId}?api_key=ENTER_YOUR_API_KEY`
+        `https://api.nasa.gov/neo/rest/v1/neo/${asteroidId}?api_key=YOUR_API_KEY`
       );
       dispatch(fetchAsteroidSuccess(response.data));
+    } catch (error) {
+      dispatch(fetchAsteroidFailure(error.message));
+    }
+  };
+
+  const handleFetchRandomAsteroid = async () => {
+    dispatch(fetchAsteroidStart());
+    try {
+      const response = await Axios.get(
+        'https://api.nasa.gov/neo/rest/v1/neo/browse?api_key=DEMO_KEY'
+      );
+      const asteroids = response.data.near_earth_objects;
+      if (asteroids.length > 0) {
+        const randomAsteroid = asteroids[Math.floor(Math.random() * asteroids.length)];
+        const asteroidResponse = await Axios.get(
+          `https://api.nasa.gov/neo/rest/v1/neo/${randomAsteroid.id}?api_key=YOUR_API_KEY`
+        );
+        dispatch(fetchAsteroidSuccess(asteroidResponse.data));
+      }
     } catch (error) {
       dispatch(fetchAsteroidFailure(error.message));
     }
@@ -37,6 +56,10 @@ const AsteroidApp = () => {
         title="Submit"
         onPress={handleFetchAsteroid}
         disabled={!asteroidId}
+      />
+      <Button
+        title="Random Asteroid"
+        onPress={handleFetchRandomAsteroid}
       />
       <AsteroidInfo />
     </View>
