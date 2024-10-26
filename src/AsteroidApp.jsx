@@ -7,9 +7,8 @@ import {
   fetchAsteroidFailure,
 } from './slices/asteroidSlice';
 import Axios from 'axios';
-import AsteroidInfo from './components/AsteroidInfo';
 
-const AsteroidApp = () => {
+const AsteroidApp = ({ navigation }) => {
   const [asteroidId, setAsteroidId] = useState('');
   const dispatch = useDispatch();
 
@@ -20,6 +19,7 @@ const AsteroidApp = () => {
         `https://api.nasa.gov/neo/rest/v1/neo/${asteroidId}?api_key=YOUR_API_KEY`
       );
       dispatch(fetchAsteroidSuccess(response.data));
+      navigation.navigate('AsteroidDetail');
     } catch (error) {
       dispatch(fetchAsteroidFailure(error.message));
     }
@@ -38,6 +38,7 @@ const AsteroidApp = () => {
           `https://api.nasa.gov/neo/rest/v1/neo/${randomAsteroid.id}?api_key=YOUR_API_KEY`
         );
         dispatch(fetchAsteroidSuccess(asteroidResponse.data));
+        navigation.navigate('AsteroidDetail');
       }
     } catch (error) {
       dispatch(fetchAsteroidFailure(error.message));
@@ -52,16 +53,8 @@ const AsteroidApp = () => {
         value={asteroidId}
         onChangeText={setAsteroidId}
       />
-      <Button
-        title="Submit"
-        onPress={handleFetchAsteroid}
-        disabled={!asteroidId}
-      />
-      <Button
-        title="Random Asteroid"
-        onPress={handleFetchRandomAsteroid}
-      />
-      <AsteroidInfo />
+      <Button title="Submit" onPress={handleFetchAsteroid} disabled={!asteroidId} />
+      <Button title="Random Asteroid" onPress={handleFetchRandomAsteroid} />
     </View>
   );
 };

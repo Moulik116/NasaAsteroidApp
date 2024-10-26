@@ -3,8 +3,8 @@ import { createSlice } from '@reduxjs/toolkit';
 const asteroidSlice = createSlice({
   name: 'asteroid',
   initialState: {
-    info: null,
     loading: false,
+    asteroidData: null,
     error: null,
   },
   reducers: {
@@ -14,7 +14,7 @@ const asteroidSlice = createSlice({
     },
     fetchAsteroidSuccess(state, action) {
       state.loading = false;
-      state.info = action.payload;
+      state.asteroidData = action.payload;
     },
     fetchAsteroidFailure(state, action) {
       state.loading = false;
